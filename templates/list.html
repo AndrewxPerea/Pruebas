@@ -9,12 +9,22 @@
             <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
             <li class="breadcrumb-item active">CRUD</li>
         </ol>
+        {% if user.is_authenticated %}
+        {% if user.groups.first.name == 'Administradores' %}
         <div class="card mb-4">
             <div class="card-header">
                 <i class="fas fa-table me-1"></i>
                 CRUD List
                 <a class="btn btn-sm btn-success" href="{% url 'create' %}" style="padding: 8px; float: right; background-color: green; color: white;">ADD</a>
             </div>
+            {% else %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table me-1"></i>
+                    CRUD List
+              </div>
+                {% endif %}
+                
             <div class="card-body">
                 {% for message in messages %}
                     <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
@@ -31,7 +41,10 @@
                         <th>Description</th>
                         <th>Location</th>
                         <th>Created At</th>
+                        {% if user.groups.first.name == 'Administradores' %}
                         <th>Action</th>
+                        {% endif %}
+
                     </tr>
                     </thead>
                     <tbody>
@@ -44,15 +57,19 @@
                             <td>{{ member.description }}</td>
                             <td>{{ member.location }}</td>
                             <td>{{ member.created_at  |date:"d-m-Y H:i:s" }}</td>
+                            {% if user.groups.first.name == 'Administradores' %}
                             <td>
+                                
                                 <a class="btn btn-sm btn-warning" href="edit/{{ member.id }}"> <span class="fa fa-edit"></span> Edit</a>
                                 <a class="btn btn-sm btn-danger" href="delete/{{ member.id }}"><span class="fa fa-trash"></span> Delete</a>
                             </td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
             </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
